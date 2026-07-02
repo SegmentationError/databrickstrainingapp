@@ -1,0 +1,23 @@
+# Databricks App runtime config.
+# Resource bindings (the Lakebase database, the SQL Warehouse) are configured
+# separately via the app's "Resources" tab (or a databricks.yml bundle) and
+# injected as environment variables at runtime — never hardcode them here.
+
+command:
+  - "uvicorn"
+  - "backend.main:app"
+  - "--host"
+  - "0.0.0.0"
+  - "--port"
+  - "8000"
+
+env:
+  # Bound via the "SQL Warehouse" resource in the app's Resources tab.
+  # Provides DATABRICKS_WAREHOUSE_HTTP_PATH at runtime.
+  - name: "DATABRICKS_WAREHOUSE_HTTP_PATH"
+    valueFrom: "sql-warehouse"
+
+  # Bound via a "Database" (Lakebase) resource in the app's Resources tab.
+  # Provides PGHOST / PGPORT / PGDATABASE / PGUSER at runtime.
+  - name: "PGHOST"
+    valueFrom: "metadata-db"
